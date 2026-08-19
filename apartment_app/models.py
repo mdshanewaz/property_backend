@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class ApartmentModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='apartment')
     division = models.ForeignKey(DivisionModel, on_delete=models.CASCADE, related_name='apartment_division')
-    district=models.ForeignKey(DistrictModel, on_delete=models.CASCADE, related_name='apartment_district')
+    district = models.ForeignKey(DistrictModel, on_delete=models.CASCADE, related_name='apartment_district')
     
     # Apartment's location Info
     building_name = models.CharField(max_length=100, blank=True, null=True)
@@ -21,12 +21,12 @@ class ApartmentModel(models.Model):
     # Rooms
     master_bedrooms = models.PositiveIntegerField(default=1)
     common_bedrooms = models.PositiveIntegerField(default=0)
-    living_bedrooms = models.PositiveIntegerField(default=0)
+    drawing_rooms = models.PositiveIntegerField(default=0)
     dining_rooms = models.PositiveIntegerField(default=1)
     kitchens = models.PositiveIntegerField(default=1)
-    washrooms = models.PositiveIntegerField(default=1)
+    wash_rooms = models.PositiveIntegerField(default=1)
     balconies = models.PositiveIntegerField(default=0)
-    storerooms = models.PositiveIntegerField(default=0)
+    store_rooms = models.PositiveIntegerField(default=0)
     servant_rooms = models.PositiveIntegerField(default=0)
 
     # Extra Features
@@ -39,7 +39,16 @@ class ApartmentModel(models.Model):
     available_from = models.DateField(null=True, blank=True)
 
     # Image of the Apartment
-    image = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image1 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image2 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image3 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image4 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image5 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image6 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image7 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image8 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image9 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
+    image10 = models.ImageField(upload_to='apartment_app/img', null=True, blank=True)
 
     # Video of the Apartment
     video = models.FileField(upload_to='apartment_app/video', null=True, blank=True)

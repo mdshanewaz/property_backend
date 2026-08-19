@@ -1,14 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from user_app.models import ProfileModel
 from apartment_app.models import ApartmentModel
 from apartment_app.serializers import ApartmentSerializer
 
 # Create your views here.
-# Apartment Post
+# Apartment Create
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def create_apartment_view(request):
@@ -18,12 +18,11 @@ def create_apartment_view(request):
     profile = ProfileModel.objects.get(owner=user)
 
     if not profile.is_completed:
-        return Response({'detail' : 'Complete your profile first.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message' : 'Complete your profile first.'}, status=status.HTTP_400_BAD_REQUEST)
 
     if not profile.is_verified:
-        return Response({'detail' : 'Your profile is not verified. Please contact support.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message' : 'Your profile is not verified. Please contact support.'}, status=status.HTTP_400_BAD_REQUEST)
     
-
 
     if serializer.is_valid():
         division = serializer.validated_data.get('division')
@@ -31,6 +30,9 @@ def create_apartment_view(request):
         
         # Check if the district belongs to the selected division
         if district.division != division:
+            # print(serializer.validated_data)
+            # print(division)
+            # print(district)
             return Response({"error": "Selected district does not belong to the selected division."}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer.save(user=request.user)
@@ -57,6 +59,7 @@ def apartment_view(request, pk):
 
 # All Apartments
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_apartment_view(request):
     # All Appertment from the database
     items = ApartmentModel.objects.all()
@@ -66,21 +69,22 @@ def get_apartment_view(request):
 
     return Response({'message' : 'All apartments', 'data' : apartment_serializer.data}, status=status.HTTP_200_OK)
 
+
 # Apartment Edit View
-@api_view(['POST'])
+@api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def edit_apartment(request, pk):
     user = request.user
-
+    
     try:
         apartment = ApartmentModel.objects.get(id=pk)
     
     except ApartmentModel.DoesNotExist:
-        return Response({'detail':'Apartment not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error':'Apartment not found.'}, status=status.HTTP_404_NOT_FOUND)
     
     # Ownership check
     if user != apartment.user:
-        return Response({'detail': 'You are not authorized to edit this post'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': 'You are not authorized to edit this Apartment'}, status=status.HTTP_403_FORBIDDEN)
     
     serializer = ApartmentSerializer(apartment, data=request.data, partial=True)
 
@@ -89,3 +93,22 @@ def edit_apartment(request, pk):
         return Response({'message' : 'Apartment updated successfully.', 'data' : serializer.data}, status=status.HTTP_200_OK)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Apartment Delete View
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_apartment(request, pk):
+    user = request.user
+
+    try:
+        apartment = ApartmentModel.objects.get(id=pk)
+    except ApartmentModel.DoesNotExist:
+        return Response({'error':'Apartment Not Found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if apartment.user != user:
+        return Response ({'error':'You are not authorized to delete this apartment'}, status=status.HTTP_403_FORBIDDEN)
+
+    apartment.delete()
+
+    return Response({'message':'Apartment is deleted'}, status=status.HTTP_200_OK)

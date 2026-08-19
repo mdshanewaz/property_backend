@@ -119,11 +119,13 @@ def logoutView(request):
         return Response({'Logout' : False})
 
 
+
 # Check Authenticated
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def is_authenticated_view(request):
     return Response({'Authenticated' : True})
+
 
 
 # Register View
@@ -193,6 +195,7 @@ def register_user_view(request):
     
     except Exception as err:
         return Response({'error':str(err)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # OTP View
@@ -285,6 +288,7 @@ def profile_user_view(request):
     return Response(serializer.data)
 
 
+
 # Forgot or reset password view
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -337,6 +341,7 @@ def email_otp_reset_pass_view(request):
     return res
 
 
+
 # Reset password view
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -374,6 +379,7 @@ def reset_pass_view(request):
 
     res.delete_cookie('temporary_access_token', path='/', samesite='None')
     return res
+
 
 
 # Profile edit view

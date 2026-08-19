@@ -9,7 +9,7 @@ class LandModel(models.Model):
     division = models.ForeignKey(DivisionModel, on_delete=models.CASCADE, related_name='land_division')
     district=models.ForeignKey(DistrictModel, on_delete=models.CASCADE, related_name='land_district')
     
-    # Land's location Info
+    # Land's Info
     land_name = models.CharField(max_length=100, blank=False, null=False)
     owner_name = models.CharField(max_length=100, blank=True, null=True)
     owner_phone = models.CharField(max_length=15, null=True, blank=True)
@@ -24,7 +24,11 @@ class LandModel(models.Model):
     available_from = models.DateField(null=True, blank=True)
 
     # Image of the Land
-    image = models.ImageField(upload_to='land_app/img', null=True, blank=True)
+    image1 = models.ImageField(upload_to='land_app/img', null=True, blank=True)
+    image2 = models.ImageField(upload_to='land_app/img', null=True, blank=True)
+    image3 = models.ImageField(upload_to='land_app/img', null=True, blank=True)
+    image4 = models.ImageField(upload_to='land_app/img', null=True, blank=True)
+    image5 = models.ImageField(upload_to='land_app/img', null=True, blank=True)
 
     # Video of the Land
     video = models.FileField(upload_to='land_app/video', null=True, blank=True)

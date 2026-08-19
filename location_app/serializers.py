@@ -10,6 +10,7 @@ class DivisionSerializer(serializers.ModelSerializer):
 
 # District Serializer
 class DistrictSerializer(serializers.ModelSerializer):
+    # division = serializers.CharField(source="division.name", read_only=True)
     class Meta:
-        models = DistrictModel
+        model = DistrictModel
         fields = ['id', 'name', 'division']

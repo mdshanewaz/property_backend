@@ -29,6 +29,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 # Profile Serializer
 class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="owner.username", read_only=True)
     class Meta:
         model = ProfileModel
         exclude = ['otp_validated', 'is_verified', 'created']
