@@ -19,4 +19,4 @@ class LandSerializer(serializers.ModelSerializer):
     class Meta:
         model = LandModel
         exclude = ['created_at', 'updated_at']
-        # read_only_fields = ['user']
+        read_only_fields = ['user']

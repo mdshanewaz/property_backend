@@ -26,6 +26,7 @@ urlpatterns = [
     path('land/', include('land_app.urls')),
     path('user/', include('user_app.urls')),
     path('rent/', include('rent_app.urls')),
+    path('developer/', include('developer_app.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

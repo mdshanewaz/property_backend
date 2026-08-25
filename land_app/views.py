@@ -51,7 +51,7 @@ def land_view(request, pk):
     return Response({'message': 'Land details', 'data':serializer.data}, status=status.HTTP_200_OK)
 
 
-# All lands
+# All land's List
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def lands_list_view(request):
@@ -100,8 +100,7 @@ def land_delete_view(request, pk):
         return Response({'error':'Land Not Found'}, status=status.HTTP_404_NOT_FOUND)
 
     if user != land.user:
-        return Response({'error':'You are not authorized to delete the land'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error':'You are not authorized to delete the Land'}, status=status.HTTP_403_FORBIDDEN)
 
     land.delete()
-
     return Response({'message':'Land is deleted'}, status=status.HTTP_200_OK)

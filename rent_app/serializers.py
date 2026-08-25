@@ -25,3 +25,4 @@ class RentSerializer(serializers.ModelSerializer):
     class Meta:
         model = RentModel
         exclude = ['created_at', 'updated_at']
+        read_only_fields = ['user']

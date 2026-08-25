@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'location_app',
     'land_app',
     'rent_app',
+    'developer_app',
 
     # Third party packages
     'rest_framework',
