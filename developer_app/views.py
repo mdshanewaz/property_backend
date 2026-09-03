@@ -14,6 +14,7 @@ from user_app.models import ProfileModel
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def developer_list_view(request):
+    
     developers = DeveloperModel.objects.all()
 
     # Pass the data to serializer from frontend and backend communication (many= True for multiple objects)
@@ -27,7 +28,7 @@ def developer_list_view(request):
 def developer_view(request, pk):
     try:
         developer = DeveloperModel.objects.get(id=pk)
-    except DeveloperModel.DoesNotExist():
+    except DeveloperModel.DoesNotExist:
         return Response({'detail' : 'Developer not found'}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = DeveloperSerializer(developer)
@@ -55,9 +56,31 @@ def developer_create_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Developer update view
 @api_view(['PATCH'])
-def developer_update_view(request):
-    pass
+@permission_classes([IsAuthenticated])
+def developer_update_view(request, pk):
+    user = request.user
+
+    try:
+        developer = DeveloperModel.objects.get(id=pk)
+    except DeveloperModel.DoesNotExist:
+        return Response({'error':'Developer not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if user != developer.user:
+        return Response({'error':'You are not authorzied to update this developer'},status=status.HTTP_403_FORBIDDEN)
+
+    serializer = DeveloperSerializer(developer, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'message':'Developer is updated successfully.', 'data':serializer.data}, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+
 
 # Developer delete view
 @api_view(['DELETE'])
@@ -67,11 +90,11 @@ def developer_delete_view(request, pk):
 
     try:
         developer = DeveloperModel.objects.get(id=pk)
-    except DeveloperModel.DoesNotExist():
+    except DeveloperModel.DoesNotExist:
         return Response({'error':'Developer not found'}, status=status.HTTP_404_NOT_FOUND)
 
     if user != developer.user:
-        return Response (status=status.HTTP_403_FORBIDDEN)
+        return Response ({'message':'You are not authorized to delete this developer'},status=status.HTTP_403_FORBIDDEN)
 
     developer.delete()
     return Response({'message':'Developer is deleted'}, status=status.HTTP_200_OK)

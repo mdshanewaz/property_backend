@@ -82,7 +82,7 @@ def land_update_view(request, pk):
 
     if serializer.is_valid():
         serializer.save()
-        return Response({'message':'Land updated successfully.', 'data':serializer.data}, status=status.HTTP_200_OK)
+        return Response({'message':'Land is updated successfully.', 'data':serializer.data}, status=status.HTTP_200_OK)
 
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
